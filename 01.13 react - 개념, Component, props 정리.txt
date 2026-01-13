@@ -1,0 +1,70 @@
+* React : jsx = html + js 문법이 짬뽕된거
+  - html이 아니기에 html 문법과 조금 다름 => 무조건 마감태그가 있어야 함.
+    ex) <input> </input>
+    ->태그 열자마자 바로 닫을 경우엔 합칠 수 있음 => <input />
+  - 태그 안 class를 className으로 씀
+
+ ※ js와 html은 서로 언어가 다르기에 함께 사용 X
+
+* 현재 웹 개발 방식
+  - spa : single page application 
+    -> 도화지 1개, 기존 그림을 지우고 다른 그림으로 덮어쓰는 방법
+    -> 이 방법을 쓰면 화면 잠깐의 끊김도 없이 화면전환이 부드러움.
+
+* 예전 웹 개발 방식
+  - mpa : multi page application
+   -> 도화지 갯수 = 필요한 파일 수
+   -> 도화지 바꿔치기 하는 방식
+   -> 화면전환 시 약간의 미세한 끊김이 있음.
+
+* document.getElementByld('root') : html에서 id가 root라는 태그의 파일을 가져오겠습니다. 라는 의미
+* element - html 파일 tag임
+
+* 프로젝트 run
+ 1) index.html 실행 -> 빈 화면 나옴
+ 2) 동시에 main.jsx 파일 실행 -> id root의 태그를 선택해서 </app>을 화면에 그림.
+ 3) 바로 동시에 /app 실행!
+
+* Component 
+ : 함수의 리턴문에서 html 코드를 반환하는 함수
+ : 이름의 첫 글자는 반드시 대문자로 작성해야 컴포넌트로 인식
+ : 함수를 이용한 컴포넌트 생성을 권장
+ : 작성한 컴포넌트는 App 컴포넌트 안에서 사용해야 화면에 반영됨.
+ : 문법 - <컴포넌트명></컴포넌트명> or <컴포넌트명 />
+ : 각 컴포넌트는 부모와 자식 관계를 가짐
+ : javascript 함수를 컴포넌트로 사용가능
+  ex) function aaa() {   =>  function Aaa() {
+                                        return(
+
+                                         )
+       }                              }
+
+       const aaa = function() {        =>  const Aaa = function() {
+                                                       return(
+
+                                                        )
+       }                                              }
+
+       const aaa = () => {         =>  const Aaa = () => {
+                                                   return(
+
+                                                     )
+       }                                         }
+
+
+
+** react는 컴포넌트 조립하는 과정!
+** jsx 파일 1개에 컴포넌트도 1개 생성 가능!
+** 화살표 컴포넌트 바로 만드는 명령어 : rafce
+** 객체는 표현식에 사용하면 오류 발생!
+
+* props
+ : react의 부모 컴포넌트는 자식 컴포넌트에게 필요한 데이터를 전달하는 기능
+ : props 사용은 함수의 매개변수에 인자를 전달하는 것과 비슷한 내용!
+ : props로 전달되는 데이터는 객체타입으로 전달
+ : 자바스크립트의 구조분해할당 문법을 사용하면 props를 좀 더 편하게 받아 사용가능!
+ 
+
+
+
+
