@@ -1,0 +1,131 @@
+* jsx에서는 변수를 html로 표현가능
+* undefined : 정의되지 않음 -> 변수가 선언만 하고 초기값이 없는 경우
+                                   -> 변수 선언이 되지 않았을 때
+
+* null 이랑 undefined랑은 다름
+* export & import는 짝지
+  -> export : 내보내기, export 없으면 다른 파일에서 import 불가능!
+  -> import : 가져오기
+
+* jsx에서는 감싸는 용도로 빈 태그 사용가능
+
+* 객체 전체 출력하려고 하면 오류남
+
+★1. boolean, null, undefined 값은 출력 안됨!(오류는 아님)
+★2. 자바스크립트 문법을 html에 적용시 문자나 숫자와 같은 하나의 값으로 평가되는 코드만 가능(if, for문 안됨!!) 
+  -> return문 위 자바스크립트 영역에선 가
+★3. 삼항연산자는 return문 안에 바로 쓸 수 있음
+★4. jsx 안에 있는 html 코드 안에서 자바스크립트 코드를 사용하고 싶으면 { } 사용하기!
+
+ex)
+return (
+  <>
+    <div>배고프당</div>
+    <div>{result}</div> //★4.
+    <div>{num % 2 === 0 ? 1 : 2}</div> //★3.
+    <div></div>
+  </>
+  )
+
+<자바스크립트 비교연산자>
+* == : 값만 비교
+* === : 값이랑 자료형 비교
+* !== : 같지 않다
+ex)
+7 == '7' -> true
+7 === '7' -> false
+
+<div id ="root">
+  <div>
+      <div>Variable</div>
+  </div>
+</div>
+
+이렇게 되어 있다고 생각하기
+
+<Event Handling>
+* event - 클릭, 키입력, 창크기조절, 마우스호버 등 사용자가 ui와 상호작용하는 모든 것을 의미
+* Event Handling - 이벤트가 일어났을 때 실행할 코드를 작성
+ ex) 버튼을 클릭하거나 input 창에 txt를 입력하려고 할 때 3이라는 숫자를 출력하시오 -> button이나 input에 onClick{}, onChange{}사용
+      -> 중괄호 안에 화살표함수 사용하기!
+      -> onClick{() => {
+             aaa() / aaa / 3  -> 다 가능
+          }}
+
+
+<구조분해할당>
+ : 구조를 분해해서 각 값을 할당한다.
+ -> 배열, 객체에 저장된 다수의 데이터 각각을 편하게 사용하는 방법
+ -> 구조분해할당을 사용하지 않으면 변수들이 많아져서 사용하는게 간결함.
+    ex) const arr1 = [1, 7.5, 'hello'];
+          const [a1, b1, c1] = arr1;
+     => 변수 앞에 있는 [ ]는 배열이 아니라 구조분해할당임
+     => a1 = 1, b1 = 7.5, c1 = 'hello'의 값이 저장
+
+    ex) const arr2 = [5, 8.5, 'hello'];
+          const [a2, b2] = arr2;
+     => 배열의 수랑 변수 수 달라도 오류 안남!
+     => a1 = 5, b1 = 8.5 값이 저장되고, 'hello'는 저장되지도, 출력되지도 않음
+     => 배열의 수랑 변수 수가 다르면 맨 오른쪽 데이터는 저장 X , 출력 X
+      
+    ex) const arr3 = [5, 8.5, 'hello'];
+         const [a3, b3, c3, d3] = arr3;
+         console.log(d3); 
+     => 이땐 undefined 출력
+
+* 자바스크립트에서는 함수도 하나의 자료형으로 취급하여 변수에 저장가능!!
+  -> 함수표현식이 대표적인 예, 화살표 함수도 가능함.
+
+
+★★★<useState>★★★ - react에서만 있음
+* useState : 2개의 데이터를 갖는 배열
+* 0번째 자리 : 매개변수로 전달한 데이터 값
+* 1번째 자리 : 함수
+  => 1번째 함수 : 변수의 값을 변경하는 기능을 제공하는 함수
+
+ ex) const[title, setTitile] = useState('Hi~');
+
+★ 결론 ★
+ - 데이터의 값 변경이 화면에 반영되려면 해당 데이터는 반드시 useState로 선언해야 함!!!!!!
+ - state변수 : useState를 사용해 만들어진 변수 ex) title
+ - state 변경 함수 : useState를 사용해 만들어진 함수 ex) setTitle
+ - state 변경함수가 실행되면 컴포넌트를 리렌더링한다.
+ - 리렌더링 : 컴포넌트의 처음부터 끝까지 다시 실행
+ - state변수는 리렌더링 되더라도 초기화 되지 않는다!(다시 실행할 때 useState무시)
+
+ ex) 
+const UseState1 = () => {
+  
+  const [title, setTitle] = useState('hello~');
+  console.log(5);
+
+  return (
+    <>
+    <div>UseState1</div>
+    <h2>{title}</h2>
+    <button type='button' onClick={() => {
+      setTitle(10); 
+    }}>클릭</button>
+    </>
+  )
+}
+
+★흐름파악하기★
+1. title = hello~; 저장
+2. console에 5 출력
+3. 화면에 UseState1 출력
+4. title = hello~ 출력
+5. 버튼 누르면 setTitle 실행
+6. 10이 title에 들어가서 데이터가 바뀜
+7. 리렌더링해서 다시 처음으로 돌아감
+8. useState 무시하고 state변수 초기화 되지 않고 그대로 데이터 10 가지고 있음
+9. console에 5 한번 더 출력
+10. return문 다시 실행해서 화면에 출력
+     -> UseState1 화면에 출력
+     -> title 10 출력
+
+
+
+
+
+
