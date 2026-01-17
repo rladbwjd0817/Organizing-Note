@@ -1,0 +1,41 @@
+<radio>
+ - input 태그에서의 속성
+ - value의 값을 가져가서 저장
+ - radio는 name 속성 값이 같아야 세트로 판단
+ ★ 초기값은 둘 중에 하나는 선택이 되어야 함 ★
+   => 최초로 선택될 라디오의 value 값을 지정해야 함!
+ - name 속성 값이 동일하면 둘 중에 하나 선택 가능 
+   => name 속성 반드시 넣어줘야 함!
+ - name 속성 값이 다르면 중복 선택이 되어버림
+ - checked = { }
+   => { } 안 연산결과가 true면 해당 태그가 기본으로 체크됨.
+
+============================================================================
+<select>
+- select도 value 속성 잘 이용해야 함.
+ ex) 편의점에서 아이스크림을 사러 갔는데 아이스크림을 살 때 계산화면에 뜨는 건 상품명이 아니라 바코드가 들어가서 보여지는 거임!!!
+- useState(); -> 매개변수 초기값 설정인데 맨 처음 초기설정하려는 데이터의 value 값을 저장
+- value의 값이 state변수에 들어감
+
+★ 눈에 보이는 글자를 저장하는게 아니라, 선택한 option 태구의 value 값을 저장★
+★ value = 눈에 보이는 데이터가 아니라 option내에 있는 코드를 저장하는 것!
+★ select 태그에 있는 value의 값이 같으면 option의 데이터가 화면에 출력됨!!★
+ ex)
+const [data, setData] = useState('1');
+  console.log(data);
+
+  return (
+    <>
+      <select value= {data} onChange={e => {setData(e.target.value)}}>
+        <option value='1'>짜장면</option>
+        <option value='5' >밥버거</option>
+        <option value='7' >한솥</option>
+      </select>
+    </>
+  )
+} => 화면엔 짜장면이 맨 위에 출력, state 매개변수값과 option value의 값이 동일해서
+
+============================================================================
+<textarea>
+- input 이랑 비슷함
+- 속성엔 cols, rows, name, value, onChange가 주로 사용됨
