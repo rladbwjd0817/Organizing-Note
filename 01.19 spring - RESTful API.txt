@@ -20,24 +20,141 @@
  1. 객체가 필요한 클래스는 반드시 default 패키지 안에 만든다.
  2. 클래스 선언문 위에 객체 생성을 명령하는 어노테이션을 추가
  -> 스프링 프로젝트를 실행하면 객체를 자동 생성
+
 ==============================================================================
 
 * API - 서로 다른 2개가 정보(데이터)를 주고받을 수 있는 기술
 * interface - 사람vs사람, 사람vs사물, 사물vs사물 의사를 전달하는 방식
+
 * CRUD요청
  - C : CREATE -> 데이터 생성
  - R : READ -> 데이터 조회(데이터 조회, 특정 데이터만 조회)
  - U: UPDATE -> 데이터 수정
  - D : DELETE -> 데이터 삭제
-==============================================================================
 
-* RequestMapping("/boards") 
+* @GetMapping("/boards") - 조회
+ ex) URL - (GET) localhost:8080/boards
+
+* @GetMapping("/boards/3") - 글번호가 3인 게시글 조회하는 API
+ ex) URL - (GET) localhost:8080/boards/3
+
+* @PostMapping("/boards") - 등록
+ ex) URL - (POST) localhost:8080/boards
+
+* @PutMapping("/boards") - 수정
+ ex) URL - (UPDATE) localhost:8080/boards 
+   => 통상적으로 게시글 하나씩 수정하기에 글 번호가 몇 번인 게시글을 수정할지 나타내는 코드 작성
+   => @PathVariable 어노테이션을 매개변수로 활용
+
+* @DeleteMapping("/boards") - 삭제
+ ex) URL - (DELETE) localhost:8080/boards
+   => 통상적으로 게시글 하나씩 삭제하기에 글 번호가 몇 번인 게시글을 삭제할지 나타내는 코드 작성
+   => @PathVariable 어노테이션을 매개변수로 활용  
+
+==============================================================================
+* @---Mapping("/{boardNum}") 
+   => URL에 { }를 사용하여 변수처럼 활용 : URL Parameter
+   => URL Parameter로 전달되는 데이터는 메서드의 매개변수에 @PathVariable 어노테이션 활용가능 
+
+   => 문법 : @PathVariable("URL Parameter 이름")  해당 데이터를 받을 변수
+   
+   - PathVariable = url parameter
+   - 해석 : boardNum이라는 url parameter를 가져오겠다 -> url parameter에서 받은 데이터는 해당 데이터를 받을 변수로 넘어간다.
+   
+  @GetMapping("/{boardNum}")
+  public BoardDTO getBoard(@PathVariable("boardNum") int num) {
+   => boardNum이라는 url parameter를 가져오고, url parameter의 데이터를 PathVariable의 매개변수인 boardNum에 그 데이터를 넣고, boardNum 매개변수의 데이터는 int num으로 넘어간다.
+   
+   println("num = " + num);
+   
+   BoardDTO result = null;
+
+   for(BoardDTO e : boardList){
+     if(e.getBoardNum() == num){
+       result = e;
+	}
+     }	 
+   return result;
+}
+
+* @PathVariable
+- url 경로의 변수 값을 메서드 매개변수로 자동으로 추출해준 것
+1) url 경로에서 {boardNum}위치의 값을 찾음
+2) 그 값을 int num 매개변수에 자동으로 넣어줌
+3) 필요하면 타입 변환도 자동으로 해줌(String -> int)
+======================================================================================================
+
+* @PostMapping("/boards") - 등록
+ ex) URL - (POST) localhost:8080/boards
+ - 요청 시 글번호, 제목, 작성자, 조회수 데이터를 가져옴 => ex) 글번호 : 1, 제목 : 안녕, 작성자 : 김가나, 조회수 : 70
+ -
+ex)
+  puplic void regBoard(@RequestBody BoardDTO boardDTO){ => 자바스크립트 객체 문법으로 등록 할 정보 전달 가능!
+    println(boardDTO);
+    boardList.add(boardDTO);
+  }
+
+* @RequestBody 어노테이션으로 testDTO 객체에 데이터 등록, 수정 시 요청과 함께 전달되는 데이터 전달됨.
+* @RequestBody 어노테이션 다음에 클래스 자료형을 매개변수로 선언하면  해당 클래스에 데이터를 받을 수 있음!
+
+★단, 해당 클래스의 멤버변수 명은 요청 시 전달되는 객체의 key 값과 동일해야 데이터를 받을 수 있음!!★
+   ex) { boardNum : 6, writer : "김자바" } 
+        => 출력 : { boardNum : 6, writer : "김자바", title : "", readCnt : 0 } //title, readCnt는 멤버변수라 자동초기화되어 자료형에 따라 기본값이 지정 
+======================================================================================================
+
+* 게시글 삭제 API는 통상적으로 게시글 하나씩 삭제하기에 몇 번 글을 삭제하는지 정해야 됨!
+  -> for문으로 돌려서 사용
+
+@DeleteMapping("/{boardNum}") 
+  public List<BoardDTO> deleteBoard(@PathVariable("boardNum") int boardNum){
+    System.out.println("삭제하려는 글 번호 : " + boardNum);
+
+    for(int i = 0; i < boardList.size(); i++){
+      if (boardList.get(i).getBoardNum() == boardNum){
+        boardList.remove(i);
+      }
+    }
+    return boardList;
+  }
+
+ => List는 데이터마다 순번이 있어서 for-each 쓸 경우 오류가 발생함. 그렇기에 기본 for문 사용
+ => 왜 삭제에선 기본  for문을 써야할까?
+      :  삭제를 하면 List 크기/구조가 변겨오디어 for-each가 혼란이 생겨서
+
+    ex) 책장에서 책을 하나씩 보면서 마음에 안드는 책을 버리려고 빼는데 갑자기 책을 빼니까 뒤에 있던 책들이 앞으로 밀림
+         "어? 내가 지금 몇 번째 보고 있었지?" -> 혼란이 생길 수 있음
+======================================================================================================
+* 게시글 수정 API도 통상적으로 게시글 하나씩 수정하기에 글번호가 몇 번인 게시글을 수정하는지 정해야 하므로 for문 돌려야 함.
+
+@PutMapping("/{boardNum}")
+  public void updateBoard(@PathVariable("boardNum") int boardNum, @RequestBody BoardDTO boardDTO){
+    System.out.println(boardNum);
+    System.out.println(boardDTO);
+
+    for (BoardDTO e : boardList){
+      if (e.getBoardNum() == boardNum){
+        e.setTitle(boardDTO.getTitle());
+        e.setWriter(boardDTO.getWriter());
+      }
+    }
+  }
+
+ => 왜 수정에선 for-each문을 써도 될까?
+      :  수정을 한다고 해서 List의 크기나 순서는 그대로 이기에 for-each는 리스트 구조 안바뀌어서 혼란이 생기지 않아 오류가 발생하지 않음!
+
+    ex) 책장에서 책을 하나씩 보면서 내용만 수정 -> 책의 위치나 개수는 그대로 -> "여전히 몇 번째 보고 있는지 알 수 있어!"
+======================================================================================================
+* @RequestMapping("/boards") 
    -> 해당 컨트롤러의 url은 전부 "/boards"로 시작한다.
    -> 매개변수를 기본값으로 깔고 감 
-* RequestBody
+
+* rombok - 클래스안에서 밑의 어노테이션을 활용하면 스프링이 알아서 만들어 주는 기능
+ - @Getter, @Setter, @ToString, @NoArgsConstructor(기본생성자), @AllArgsConstructor(매개변수로 데이터를 받는 생성자)
+
 
 * RESTful API - 클래스에서 모든 메서드가 REST를 기반으로 API를 만든 것
-==============================================================================
+
+======================================================================================================
 
 ex)
 <요청에 대한 응답>
@@ -54,6 +171,7 @@ localhost:8080/members    -> getMemberList 메서드를 실행
 
 => url 직접입력해서 응답받으면 무조건 get방식만 실행됨!(중복되든 아니든)
 => post 실행하려면 react 만들어줘야 함
+
 
 
 * java 클래스자료형이 자바스크립트에서는 객체로 표현됨.
