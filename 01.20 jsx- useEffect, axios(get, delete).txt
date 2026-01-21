@@ -1,0 +1,60 @@
+<UseEffec> 
+
+ - 컴포넌트의 life cycle 주기에 특정 기능을 구현할 때 사용
+ - useEffect 안의 코드는 화면 렌더링 후 제일 마지막에 실행
+ 
+ - 문법 : useEffect(화살표함수, 의존성 배열)
+ ex) useEffect( () => { aaa() })
+      -> 함수 선언문의 { }안에 실행할 코드를 작성
+ - 의존성 배열이란 useEffect 안의 내용을 실행할 생애주기를 컨트롤하기 위한 내용 
+
+ - 의존성 배열에 작성된 state 변수의 값이 업데이트 될 때 useEffect 안의 내용은 다시 실행됨
+   ex) useEffect(( ) => {
+	  console.log('실행');
+         }, [ ]) => 의존성 배열을 빈 배열로 주면 컴포넌트가 mount 될 때만 useEffect 안의 내용이 실행
+
+ - 의존성 배열로 빈 배열을 전달하면 컴포넌트 mount 시에만 useEffect의 내용이 실행
+   ex) useEffect(( ) => {
+	  console.log('실행');
+         }, [ age ]) => 의존성 배열로 [age]를 작성하면 컴포넌트가 mount 될 때, state 변수 age의 값이 변하여 컴포넌트가 리렌더링 될 때만 useEffect의 내용 실행
+
+ - 의존성 배열을 작성하지 않는다면 useEffect 코드를 작성한 컴포넌트가 리렌더링될 때마다 useEffect 안의 내용이 다시 실행
+   ex) useEffect(( ) => {
+	  console.log('실행');
+         }, [ age, name ]) => 의존성 배열로 [age, name]을 작성하면 컴포넌트가 mount 될 때, state 변수 age가 변하거나 state 변수 name이 변하여 컴포넌트가 리렌더링 될 때 useEffect 안의 내용이 실행
+
+Q. useEffect 왜 사용할까?
+ => 만약 코드 실행이 1000번 반복문을 실행 후 렌더링 한다 치면, 사용자 입장에서는 화면이 늦게 뜨는 불편함이 있기에 
+       useEffect는 화면을 그린 후 반복하기 때문에 사용자의 불편한 경험을 줄일 수 있어서 사용!
+       useEffect 안에는 시간이 오래걸리는 작업(대표적으로 서버에서 데이터 받기)을 수행하는 코드를 작성함
+
+* 실행순서
+ 0. 다른코드 실행해서 렌더링 후에 마지막에 실행됨.
+ 1. get까지만 실행 -> spring에 url로 요청함
+ 2. spring에서 메서드 실행 -> 응답해서 react로 전달
+ 3. spring에서 메서드 실행에 문제 없으면 .then 실행 / 문제 있으면 .catch 실행 => 둘 중에 하나만 실행됨( like if/else 처럼 )
+
+==============================================================================
+
+<Axios> - get, delete
+
+- 데이터 통신이랑 데이터를 주고 받는다는 의미
+- 서버로 spring을 사용하기 때문에  axios를 이용하면 서버인 spring과 하단의 react가 서로서로 데이터를 주고 받을 수 있음.
+-  react -> spring 
+   통신 명령어 보내는 것 : request / 통신 응답 : response
+- 문법 
+  1) 서버의 데이터를 react에서 받기(get, delete)
+  * axios.get(url, [설정내용]).then(통신 성공 후 실행 내용).catch(통신 실패 시 실행 내용);  --> get : 조회
+  * axios.delete(url, [설정내용]).then(통신 성공 후 실행 내용).catch(농신 실패 시 실행 내용); -->delete : 삭제
+  ex) 
+  cosnt [age, setAge] = useState(0);
+  
+  useEffect(( ) => { 
+	axios.get( 'http://localhost:8080/emps' )
+	.then(response => {console.log('통신 완료') } ) //화살표 함수 들어감
+	.catch(error => {console.log(error)} ); //화살표 함수 들어감, 통신 실패 하면 콘솔에 에러에 대한 모든 정보가 출력
+  })
+  => ★ response는 통신 완료에 대한 모든 정보가 있는 객체 /  error는 통신 실패에 대한 모든 정보가 있는 객체 ★
+  => response에 실제 서버로부터 받은 데이터는 응답 정보 중 키 값이 data 인 곳에 담겨 옴
+        ->response.data 를 통해 접근 가능
+
