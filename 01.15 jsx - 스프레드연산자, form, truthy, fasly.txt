@@ -62,8 +62,3 @@ ex) 10 > 3 && 5 < 3
   e.target -> 이벤트가 발생한 html 태그
   value -> state 변수
   e.target.value -> 내가 입력한 값
-
-
-
-
-
