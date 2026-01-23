@@ -1,0 +1,42 @@
+<DB & Spring 연동>
+
+<xml>
+* resultType, resultMap은 조회한 하나의 행 데이터를 가져오기 위해서 사용하는 것이기에 select만 사용, 나머진 사용 X
+
+ex)
+<insert id="insertBoard">
+        INSERT INTO BASIC_BOARD (
+            TITLE
+            , WRITER
+            , CONTENT
+        ) VALUES(
+            #{title}
+            ,#{writer}
+            ,#{content}
+        )
+    </insert>
+  
+=> #{ } : 변수 사용 , 빠진 데이터 -> Mapper 인터페이스에서 매개변수로 채워넣어줘야 함!
+
+=====================================================================================
+<Mapper>
+
+* select, delete, update의 리턴타입 : void or int
+ -> 쿼리 실행 결과 삽입되거나 지워지거나 수정이 되는 행(데이터)의 수 : int로 리턴
+ -> 리턴할게 없으면 void
+
+ex) void insertBoard(BoardDTO boardDTO);
+
+=====================================================================================
+<Service> & <Controller> 진행은 select와 같음!
+
+=====================================================================================
+<DB & Spring  & React 연동>
+
+1. DB 테이블 먼저 작성
+2. Spring 기본 틀 잡기
+3. Spring : DTO 클래스 생성 -> xml에서 쿼리 작성 -> mapper 인터페이스 에서 쿼리 실행 -> service에서 쿼리 기능 실행 -> controller에서 api 작성
+4. react 틀 잡기
+5. react 기능 생성
+
+=====================================================================================
