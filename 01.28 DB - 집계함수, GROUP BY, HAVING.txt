@@ -1,0 +1,44 @@
+<DB> - 집계함수, GROUP BY, HAVING
+
+1. 단일행함수 VS 집계함수
+- 단일행함수 : 각 행마다 하나의 결과를 가지는 함수
+- 집계함수 : 함수 실행결과 무조건 하나의 행 결과를 가지는 함수
+  -> 집계함수 종류 :  SUM( ), MIN( ), MAX( ), COUNT( ) -데이터의 수, AVG( )
+
+ex) 테이블에 데이터가 10개 존재 -> 함수 실행 결과 조회 데이터도 10개
+SELECT COMM, IFNULL(COMM, 10) FROM EMP; #단일행 함수의 예시
+SELECT SUM(SAL) FROM EMP; #집계함수의 예시
+
+ex) #집계함수
+SELECT SUM(SAL), MIN(SAL), MAX(SAL), COUNT(SAL), AVG(SAL) FROM EMP;
+
+★ COUNT( ), AVG( ) 집계함수 사용 시 NULL 데이터 주의!! ★
+ -> 데이터의 갯수 및 평균을 구할 때는 NULL 데이터는 제외하여 계산함.
+
+-  COUNT( ) 함수 안의 컬럼은 NULL 데이터가 포함된 컬럼은 가급적 사용 X , NULL 데이터가 들어오지 않는 컬럼을 넣어야 함.
+    -> PRIMARY KEY(기본키)를 사용함.
+
+★ 단일행함수 및 일반 컬럼 조회는 집계함수와 함께 사용 시 주의가 필요!! ★
+ - 주의 : 조회하는 모든 컬럼은 반드시 조회되는 데이터의 행 갯수가 동일해야 조회 가능함.
+ - 결론 : 집계함수는 단일행 함수 및 일반 컬럼이랑 함께 조회할 수 없음!
+
+2. GROUP BY
+- 특정 기준에 따라 그룹을 묶어 집계 데이터를 조회할 때 사용, 집계 함수와 함께 사용
+
+ex) SELECT JOB, AVG(SAL)
+       FROM EMP 
+     GROUP BY JOB;
+
+- MAX( ) 괄호 안 문자가 오면 오름차순 기준으로 'ㅎ'으로 갈 수록 큰 글자!
+
+3. HAVING 
+- GROUP BY 결과 그룹화 되는 데이터를 기준으로 조건을 부여할 때 사용
+
+ex) SELECT JOB, MAX(SAL) - MIN(SAL)
+      FROM EMP
+    WHERE DEPTNO != 30
+    GROUP BY JOB
+
+★ 쿼리 문의 해석 순서 ★
+FROM -> WHERE -> GROUP BY -> HAVING -> SELECT -> ORDER BY
+
