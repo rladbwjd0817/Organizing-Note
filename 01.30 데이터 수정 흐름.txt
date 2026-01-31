@@ -1,0 +1,42 @@
+<데이터 수정 흐름>
+1. 상세보기 화면에서 수정 버튼 클릭(제목, 내용)
+2. 정보 수정 페이지로 이동 -> 기존의 내용은 화면에 보여야 함. --->useEffect
+3. 내용 수정 후 수정확인 버튼을 누르면 수정되야 함. ----> 새로운 변수 생성해서 수정한 내용 저장
+4. 상세 페이지로 다시 이동 --->
+
+* 조회한 게시글의 정보를 수정한 게시글 정보의 변수에 저장
+
+-1. boardInfo = {} -> mount 일 때임!
+ -> 데이터 조회하면 boardInfo = {............} 값이 변경
+-> updateData = boardInfo; 실행 할 계획!
+
+Object.keys(boardInfo) -> boardInfo의 키만 빼줌
+
+<UpdateForm 흐름>
+1. localhost:5173/update/2 url 들어와서 updateForm 실행
+2. boardNum = 2; -> url parameter로 들어옴
+3. boardInfo = {}
+4. UpdatdData = {
+ title : '',
+ content : ''
+} 
+생성
+5. return문에서 그림을 그림
+6. boardInfo.createDate , boardInfo.writer -> {} 빈객체 언디파인드 
+7. updatedata.title, updatedata.content -> ''
+8. useEffect 실행
+ 8-1) axios로 글 번호 2 가져감 -> 글번호 2번 상세정보 조회
+ 8-2) console창에 상세정보 출력
+ 8-3) boardInfo에 상세 정보 데이터 저장
+ 8-4) 2번째 useEffect 실행
+ 8-5) if 문 실행
+ 8-6) setupdateData에 title, content에 boardInfo의 타이틀, 내용 정보가 저장됨
+ 8-7) 리렌더링 1번! 함(state 변경함수가 여러개면 해석 할 것  다 하고 퉁쳐서 1번만 실행) 
+9. 리렌더링!
+10. return에서 boardInfo의 작성일, 작성자, value의 업데이트데이트 안의 제목과 내용이 화면에 출력
+
+ => 입력한 내용은 updateData에 저장되고 있음!
+
+state 변경함수는 바로 리렌더링 하는게 아니라 나머지 다 실행하고 나서 1번 리렌더링함. 
+
+  

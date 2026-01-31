@@ -1,0 +1,41 @@
+<DB>
+
+1. 별칭사용법
+SELECT EMP.EMPNO, EMP.ENAME, EMP.SAL
+  FROM EMP;
+  -> 컬럼 앞에 테이블명을 원래는 적음.
+ 
+* 테이블에 별칭을 줄 땐 AS 키워드 붙이지 X
+* 별칭은 짧게! -> 간결하게 사용하기 위해서
+ex) FROM EMP RR;
+
+
+2. JOIN
+- 둘 이상의 데이터를 동시에 조회할 때 사용하는 것
+- 종류 : CROSS, INNER, OUTER, SELF 조인
+
+
+3. CROSS JOIN
+- 사용 못하는 조인
+- 중복 데이터는 그냥 조회하면 오류나기에 앞에 <테이블명 . 컬럼명> 으로 조회가능!
+
+4. INNER JOIN
+- 조건을 넣어 유효한 데이터를 뽑아내는 것
+- <테이블명 . 컬럼명> = <테이블명 . 컬럼명>
+- 조인 조건 : 조인하고자 하는 두 테이블이 공통적으로 가진 컬럼이 같은 값만 조회한다는 조건 추가
+  => 무조건 넣어주기!
+
+- 그래서 <테이블명 . 컬럼명> 을 자주 쓰니 테이블명을 간단하게 쓰기 위해 별칭을 사용함!
+
+5. ANSI문법의 JOIN
+- ANSI : 국제표준으로 만들어 놓은 SQL 문법
+- ANSI문법은 국제표준이기 때문에 DB종류와 상관없이 모든 디비에서 공통으로 사용할 수 있는 문법
+- ANSI문법에서는 ON이 조건
+- 두번째 조건에서는 WHERE 절 사용!
+
+ SELECT EMPNO, ENAME, E.DEPTNO, DNAME
+  FROM EMP E INNER JOIN DEPT D
+     ON E .DEPT = D.DEPT
+ WHERE E. DEPTNO IN (10, 20);
+
+
