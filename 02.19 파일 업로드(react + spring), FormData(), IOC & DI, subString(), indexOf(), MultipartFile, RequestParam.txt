@@ -1,0 +1,121 @@
+<상품등록 기능에 이미지 추가>
+
+ 1. 도서 등록 화면에 이미지를 선택할 수 있는 태그 생성
+    ex)<input type= 'file'> -> 파일선택 가능
+  * input 태그에 여러 파일 올리기 -> multiple={true}
+
+ 2. 입력한 도서 정보를 저장(이미지 포함)
+  2-1. 서버(스프링)에 선택한 이미지 파일을 저장 -> 파일 첨부기능(업로드 기능)
+   -> 스프링에 이미지를 담을 통이 있나? ----------------------------------------------->Yes. MultipartFile 자료형이 있음!
+  - react part - 
+  1) 리액트에서 input 태그 추가(type = 'file', onChange={e => {})
+      ex) console.log(e.target.files) -> 이벤트가 일어난 태그(input의 file)를 출력 
+           => 파일첨부를 하면 콘솔창에  객체형태로 파일의 정보가 뜸
+           => 업로드한 파일 목록으로 실제 파일 데이터임!
+  2) input 태그에서 선택한 파일을 state 변수에 저장 -> 파일 통째로 저장하는거임!!!(파일 이름만 저장하는거 아님)
+      ex) 초기값을 null / { } 주기
+  3) 도서 정보(문자, 숫자) + 파일정보 모두를 담을 수 있는 FormData( )객체 생성 및 내용 저장
+      ex) const regForm = new FormData( );
+  4) FormData에 저장된 모든 정보를 axios를 이용해 spring에 전달
+      이때, 파일 데이터도 전송할 수 있도록 axios의 설정 내용을 추가 해야함. --------> *-3
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+  - spring part -
+  5) Controller에서 MultipartFile 객체를 이용해 전달되는 파일 데이터를 받음
+  6) application.properties 파일에 업로드 할 파일 경로를 지정
+  7) 전달받은 파일을 업로드하기 위해 파일명을 생성 -> uuid,
+  8) 파일 업로드 코드 작성
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------
+  2-2. 데이터베이스에 이미지 정보도 저장 => 이미지 이름을 저장하는 거임!
+     -> 이미지를 어떻게 데이터베이스에 저장? 어떤 정보들을 저장할래? => ★파일 자체가 아니라 파일명을 저장★
+     -> <img src= {book.imgName} /> 이런식으로 필요한 데이터만 뽑아서 사용하기 위해서 저장
+
+  
+
+
+
+=====================================================================================
+*-0) FormData( ) : 파일(이미지, pdf등)은 JSON으로 전송이 안되기에 텍스트+파일을 함께 서버로 보내기 위한 특별한 그릇
+ -> const fromData = new FormData( ); ------------------------------> 생성하는 순간 객체로 생성! 
+ -> .append( )로 직접 데이터 담아야 함.
+
+*-1) ON DELETE CASCADE : 외래키 속성, 부모테이블에서 삭제하면 그 외래키를 참조하고 있는 자식테이블의 데이터도 함께 지워지는것
+
+*-2) 파일자체는 json 으로 가져갈 수 없음!
+
+*-3) 파일도 함께 전달하기 위해서는 통신 설정에서 할 수 있음!
+  const fileConfig = { --------------------------------------------------> 이 문법 그대로 써야 함!
+      hearder : {'Content-Type' : 'multipart/form-data'}
+    }
+*-4) @RequestParam 
+ -> url뒤에 ? 붙여서 보내는 데이터, Query String 이라고도 부름
+ -> 리액트 url에서 넘어오는 데이터를 스프링이 받아주는 용도
+ -> url의 ? 뒤 파라미터를 받음
+ ex)
+@GetMapping("/products")
+public List<Product> search(@RequestParam String keyword) { }
+//호출 : /products?keyword=자바
+
+*-5) MultipartFile interface : 자바에서 파일을 받는 자료형
+
+*-6) 자바에서 특수기호(", ', & 등) 는 "역슬러시" 사용하면 "는 문자로 취급
+      ex) String addr = "역슬러시"안녕하세요"역슬러시"
+           print(addr); -> "안녕하세요"
+
+*-7) 첨부파일 저장할 디렉토리 위치 작성하는 곳은 application.properties에 작성
+      -> 수정해도 재실행 안해도 되기에 편함!
+      ex) file.upload.dir(<--일반 변수임!)=D:/01-STUDY/dev/upload/
+
+*-8) Value( "${file.upload.dir}" ) -> aka. 백틱
+
+*-9) ★ 확장자는 살려놔야 파일을 열 수 있음!! ★
+*-10) subString -> 자바에서 문자열 추출
+       ex) name.subString(1,3) -> 1번째 글자부터, 3번째 글자 전까지
+            name.subString(2) -> 2번째 글자부터, 끝까지
+*-11) indexOf("@") -> 매개변수에 입력한 문자열의 위치를 알려주는 메서드
+    ex) String fileName = "abce.jpg"
+         String result = fileName.subString(fileName.indexOf("."));
+    => 괄호부터 해석
+       lastIndexOf("@") -> 매개변수에 입력한 문자열 중 같은 문자열이 여러 개 일 경우에 마지막으로 일치하는 문자열의 위치를 알려주는 메서드
+
+*-12) const arr = [];
+        arr[0] = 10;
+        arr.push(10);
+      
+*-13) regForm.append('subImgs', subImgs) -----> 배열 통으로 넣는건 안됨!
+        대신 for문 돌려서 File 하나씩 빼서 저장은 가능, 같은 이름으로 저장도 가능!
+
+*-14) static 이 붙은 메서드는 다른 클래스에서 호출할 때 객체를 생성하지 않고 클래스명.메서드명 으로 호출이 가능함!
+       ex) UploadUtil.fileUpload( );
+
+*-15) ioc, di ★★★
+ ★ IOC - 제어의 역전 : 스프링이 대신 만들어주는 것 + 요청제어
+     ex) 객체생성 - @Service, @RestController, @Repository
+          요청제어 - @RequestMapping, @GetMapping
+ ★ DI(Dependency Injection) - 의존성 주입 : IOC를 구현하는 구체적인 방법!
+     ex) # 필드 주입 - @Autowired
+          @Autowired 
+          private OvenService ovenService;
+
+          # 생성자 주입 - Lombok이랑 같이 쓰면 더 깔끔함. ----------------->권장
+          @Service
+          @RequiredArgsConstructor // final 필드 생성자 자동 생성 
+          public class PizzaStrore{
+          	private final OvenService ovenService; // 자동으로 주입!
+          }
+
+          # Setter 주입 --------------> 잘 안씀!
+          @Autowired
+          public void setOvenService(OvenService ovenService){
+          	this.ovenService = ovenService;
+          }
+
+
+  ex) 피자가게에서 오븐이 필요해! 라고 선언만 함 => spring이 알아서 오븐을 만들어줌 --------> IOC
+       배달부가 재료를 가져다줄게! ---------------------------------------------------------------------> DI
+       
+       <Spring = 천사 사장>
+       IOC = 사장이 직원 채용하고 관리하는 것(Spring이 Bean 생성/관리)
+        DI = 사장이 직원한테 필요한 도구를 가져다 주는 것(필요한 객체를 주입)
+       
+       
