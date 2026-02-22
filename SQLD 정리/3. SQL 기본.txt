@@ -1,4 +1,5 @@
 <SQL 기본>
+
 1. 관계형 데이터베이스의 개요
  1) 데이터베이스 
   : 데이터를 가공하여 유용한 정보를 얻고자 하는 것이며 이를 효율적으로 할 수 있는 방법을 연구하여 그 결과물로 만들어진 것
@@ -187,6 +188,9 @@ FROM -> WHRER -> GROUP BY -> HAVING -> SELECT -> ORDER BY
   - OR : 하나라도 참이면 참
   - NOT : 뒤에 오는 식의 참/거짓의 반대를 반환
 
+★ 연산자 우선순위 ★
+산술연산자(+, -, *, /) -> 연결연산자(=합성연산자, ||) -> 비교연산자(<, >, <=, >=, <>, =) -> IS NULL / LIKE / IN -> BETWEEN -> NOT연산자 -> AND연산자 -> OR연산자
+
 5. GROUP BY, HAVING절
  - 데이터 그룹핑
  - GROUP BY 연산이후에 조건 필터링을 수행하면 조회성능 나빠짐
@@ -209,6 +213,8 @@ FROM -> WHRER -> GROUP BY -> HAVING -> SELECT -> ORDER BY
  - 기본값은 ASC : 오름차순
  - DESC : 내림차순
  - GROUP BY절보다 논리적 실행 순서가 나중이므로 집계함수를 사용할 수 있음
+ - NULLS FIRST : NULL 값이 맨 처음 오게
+ - NULLS LAST : NULL 값이 마지막에 오게
  - NULL이 있을 경우 -> Oracle은 NULL 값을 최댓값, SQL은 최솟값 처리
  
 7. 조인
@@ -238,7 +244,7 @@ FROM -> WHRER -> GROUP BY -> HAVING -> SELECT -> ORDER BY
   - 조인 조건에 맞지 않는 행까지 포괄적으로 병합
   - 합집합
   - WHERE절에서 JOIN 컬럼 옆에 (+)를 붙이면 OUTER JOIN이 됨
-    ex) WHERE A.DEPTNO = B.DEPTNO(+) => (+)기호가 붙이 않은 쪽 테이블이 기준 테이블이 됨. = A LEFT OUTER JOIN B   
+    ex) WHERE A.DEPTNO = B.DEPTNO(+) => (+)기호가 붙지 않은 쪽 테이블이 기준 테이블이 됨. = A LEFT OUTER JOIN B   
 
 8. 표준 조인
 - ANSI SQL의 문법에 따른 조인 쿼리
@@ -272,3 +278,12 @@ FROM -> WHRER -> GROUP BY -> HAVING -> SELECT -> ORDER BY
   - 카데시안 곱 
   - 왼쪽 테이블이 M행, 오른쪽 테이블이 N행이면 M*N행이 됨
   - 조건이 별도로 지정되지 X
+
+ 5) SORT MERGE JOIN
+  - 조인의 조건이 되는 칼럼에 인덱스가 없어서 인덱스 스캔을 할 수 없거나 대량의 자료를 조인하게 되어 랜덤 액세스 방식이 부담될 경우 전체 테이블 스캔 방식을 사용하여 조인을 수행. 조인 칼럼에 대해 먼저 정렬을 수행한 후 조인을 수행
+
+ 6) NESTED LOOP JOIN
+  - 프로그래밍 언어에서의 중첩 루프를 사용한 반복문과 유사한 방식으로 수행되는 조인. 인덱스 스캔을 사용하여 데이터를 랜덤 액세스 방식으로 읽어 들이므로 데이터양이 많을 경우 많은 디스크 I/O가 발생하여 성능이 느려질 수 있음
+
+ 7) HASH JOIN
+  - NESTED LOOP JOIN의 랜덤 액세스로 인한 부하 문제와 SORT MERGE JOIN의 정렬 작업에 대한 부담 문제를 해결한 것으로 두 방식의 단점을 개선한 조인. 조인 칼럼에 대해 해시함수를 적용하여 인덱스가 없을 때 별도로 정렬을 수행하지 않고도 빠르게 조인 대상을 찾는 것이 가능하나 해시함수의 특성에 따라 EQUL JOIN에서만 사용가능. 해시함수를 사용하므로 CPU 연산 부하가 높음.
