@@ -1,0 +1,46 @@
+<02.24>
+
+* 외래키 
+ - 그 상품에 대한 회원이 없어서 삭제한다하면 삭제 가능
+ - ON DELETE CASCADE - 3번 도서에 회원이 있어도 삭제 가능
+ -> IS_DELETED 'Y' #삭제여부 추가해서 조회 했을 때 알 수 있게 해주기
+
+* replace( 'f', ' ' ) => f가 들어오면 빈문자로 바꿀게! 해주는 함수
+  ex) 만약 숫자가 아닌 문자열이 입력되면 입력된 문자열을 빈 문자열로 변경
+   =>  let cntValue = e.target.value.replace(/[^0-9]/g, '')
+
+* state변수에 초기값이 아예 없는건 좋지 X 뭐라도 줘야 함!
+   => 초기값이 없으면 undefined가 되는데 이때 렌더링 시점에 value에 undefined가 넘어가서 문제가 되어버림.
+   => 그래서 리액트가 제어해야 하는 건지 말아야 하는 건지 혼란스러워서 경고날림
+   => 그래서 타입에 맞게 초기값을 주는 것이 중요
+
+  input type을 number로 주고 value 값을 주면 한글 입력 x
+   ex) <input type="number" value={count} onChange={(e) => setCount(e.target.value)} />
+	(1) type='number'의 특성 - 브라우저가 숫자만 허용하도록 필터링되고, 실제로는 빈 문자열이 value에 찍힘.
+	(2) value로 제어되는 순간 더 엄격해져서 한글 씹힘
+	* 한글 입력 시도
+	 → e.target.value = "" (숫자가 아니니까)
+	 → setCount("") 
+	 → state = ""
+	 → input의 value = "" 로 다시 렌더링
+	 → 한글이 사라짐!
+
+* !!!!!!!!!!!!!!!!!!!!!!!!!!!post 두번째 매개변수는 스프링으로 보내서 쿼리 빈 값 채우는데 객체형태로 보내!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+* JSON.parse( ) => json을 객체 형태로
+
+* const data = {
+      bookNum : bookInfo.bookNum,
+      cartCnt : cntAndPrice.cnt,
+      memEmail : loginInfo_obj.memEmail
+    };
+
+ => 내가 뽑아쓸 데이터가 어디에 저장되어 있는지 확인해서 가져오기!
+ => 모르겠으면 console에 찍어봐
+
+* <Outlet /> : Router에서 중첩 라우팅 할 때 자식페이지가 렌더링 될 자리를 잡아주는 컴포넌트!
+
+* 장바구니 목록 조회 api에서 params는 객체를 넘겨야 하기에 {params : {memEmail : logMemEmail}} 이렇게 쓰고,
+  params는 객체의 키, {memEmail : logMemEamil}은 value 형태 만들어서 보내주기!!!!!!!!!!!!!!!!
+
+
