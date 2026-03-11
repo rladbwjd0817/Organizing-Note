@@ -159,7 +159,7 @@
 
   ex) SELECT 부서, 직급, SUM(급여)
 	FROM 직원
-	GROUP BY ROLLUP(부서, 직급);
+	GROUP BY CUBE(부서, 직급);
 
    => 부서   직급   SUM(급여)
          개발   과장     300

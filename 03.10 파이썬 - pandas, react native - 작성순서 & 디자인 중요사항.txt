@@ -1,0 +1,35 @@
+<03.10>
+
+<python>
+1. 파이썬에서 데이터분석 시 pandas 라이브러리를 활용
+2. 팀플에 적용 -> 온도, 습도, 조도 데이터를 긁어모으고, 데이터 프레임 형태로 만듬.
+
+<react native>
+0. rnfce 단축키
+1. 프로젝트 실행 시 최초 실행파일(폰에서 최초로 보이는 화면)
+2. 최초 실행 파일 순서 : _layout.js -> index.js
+3. 파일의 이름은 통상적으로 HomeScreen으로 작성함
+4. 리액트 네이티브는 파일명과 컴포넌트명이 같지 않는 경우가 많음. -> 언제는 같고 언제는 다른데 정해진 규칙이 있음
+5. SafeAreaView 컴포넌트에 감싸면 휴대폰의 툴바 밑에 내려옴
+6. StyleSheet.create( { input : { }} ) => input 이 key, { } value
+7. TextInput에서의 onChangeText의 매개변수는 매개변수가 입력한 값임!
+  => text : 휴대폰에서 키보드로 입력받은 값
+
+   ex) onChangeText={text => { }}
+  => e.targaet.value는 없음
+  => e.nativeEvent를 출력하면 터미널에 쏘씸플하게 나옴 ex) {"eventCount": 24, "target": 9198, "text": "15"}
+  	=> text가 우리가 입력한 값
+
+8. 버튼은 Pressable 컴포넌트에 Text컴포넌트 감싸기 -> Pressable 컴포넌트에 속성 onPress 주기(터치가능해짐)
+9. TextInput : secureTextEntry => true로 주면 비밀번호처럼 입력
+10. TextInput 태그에서 name 속성 이제 안씀
+
+ ** paddingHorizontal : padding 수평(좌, 우)
+ ** marginVertical : margin 수직(상, 하)
+
+*** 디자인 중요 사항!***
+- react native의 모든 컴포넌트는 전부 flex가 기본 적용되어 있음
+- 컴포넌트의 기본 디자인 - display : flex, flex-direction : column 임!
+- app은 기본적으로 높이를 잡고 시작함(실제 화면 크기 만큼!)
+ -> flex : 1 속성을 주면 화면에 맞게 꽉 참!
+- SafeAreaView 도 div역할임
