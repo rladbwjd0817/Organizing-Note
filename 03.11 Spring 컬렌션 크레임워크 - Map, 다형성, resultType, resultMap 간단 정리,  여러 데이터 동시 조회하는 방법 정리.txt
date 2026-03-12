@@ -1,0 +1,40 @@
+<03.11>
+컬렉션 프레임워크
+ - List -> 자바스크립트의 배열
+ - Map -> 자바스크립트의 객체
+
+* Map<Integer, String> map = new HashMap<>();
+  -> Map<key, value>가 들어감!!
+  -> key : 조회되는 컬럼명, value : 조회된 데이터의 자료형
+
+* Map 과 자바스크립트의 객체와 큰 차이점 : 자료형!!
+
+* 다형성 : 부모 자료형으로 자식 자료형을 담을 수 있음!
+
+* foreach에서 collection의 이름과 Mapper의 매개변수에 들어있는 멤버변수명이 같은데 이게 100%는 아님!
+
+=====================================================================================
+
+★ xml - select에서 리턴되는 하나의 형태로 구분되는 것 => resultType, resultMap
+
+<resultType>
+ - 조회되는 데이터의 자료형이 자바에서 제공되는 자료형일 경우 사용
+
+<resultMap>
+ - 조회되는 데이터의 자료형이 내가 만든 것을 활용할 경우에 사용
+==========================================================
+한 화면에 조회되는 데이터가 여러 개 일 경우
+1. 각 데이터들을 저장할 state 변수를 각각 만들어주기 
+2. 모든 데이터를 조회할 함수 생성
+3. 함수 안에 한번에 다수의 api 조회
+ ex)
+  const [response1, response2, response3, response4] = await Promise.all([ ------------> 조회를 한번에 하고 배열로 값을 반환
+      getSaleResult(), 
+       getBuyRank(), 
+       getBookRank(), 
+       getChart()
+     ]);
+4. 조회한 데이터를 state 변경함수를 통해 state 변수에 저장
+ -> setSaleResult(response1.data);
+ -> setBuyRank(response2.data);
+5. 마운트 되면 바로 조회되게 useEffect 화살표 함수 안에 2번의 함수를 호출

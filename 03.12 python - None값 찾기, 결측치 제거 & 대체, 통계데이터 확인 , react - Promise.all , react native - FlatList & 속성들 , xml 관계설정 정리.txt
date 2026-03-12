@@ -1,0 +1,54 @@
+<03.12>
+
+<python>
+
+1. isnull( ) : None 값 찾기 => True : None, False : None X
+2. any : 어떤 것 중 하나라도
+3. axis=1 : 열의 어떤 데이터든 하나 / axis=0 : 행의 어떤 데이터든 하나
+4. 각 컬럼별 결측치 갯수 확인 : df.isnull( ).sum( )
+5. 결측치 제거 : dropna( )
+6. 결측치를 고정값으로 대체 : fillna( ' ' )
+7. describe( ) : 데이터에서 숫자 데이터의 통계 데이터 확인
+    -> mean : 평균, std : 표준편차
+
+===============================================================
+<react>
+
+* Promise : 비동기에서 반환하는 값
+* Promise.all() : 조회를 한번에 하고 배열로 값을 반환 
+ 
+ ex) const [response1, response2, response3, response4] = await Promise.all([
+      getSaleResult(), ---> 조회시 성공한 데이터는 response1에 저장
+      getBuyRank(),  ---> 조회시 성공한 데이터는 response2에 저장
+      getBookRank(),  ---> 조회시 성공한 데이터는 response3에 저장
+      getChart()  ---> 조회시 성공한 데이터는 response4에 저장
+    ]);
+  }
+
+=================================================================
+<react native>
+* FlatList : 반복을 돌리는 컴포넌트
+   -> data : 반복할 데이터
+   -> renderItem : 반복해서 그릴 그림, 데이터가 여러 개 들어오면 중괄호 생략 X
+   -> keyExtractor : map 함수의 key 속성과 동일함!
+
+* contentContainerStyle : 반복적으로 그려지는 컴포넌트를 감싸는 전체 영역의 디자인
+
+* props 활용해서 dummy데이터를 CartList에 보내기
+
+==================================================================
+
+<내가 헷갈리는 부분 - 관계설정>
+* FK가 있는 쪽이 N
+ -> FK : 나는 저 테이블을 참조한다
+ -> 기준 : 하나가 여러 개를 가질 수 있나? => 1 : N 관계
+	     : FK가 중복이 될 수 있나? => 1 : 1 관계
+
+ ex) CAR_INFO : MODEL_NUM(PK), MODEL_NAME, CAR_PRICE
+      SALES_INFO : SALES_NUM(PK), SALES_NAME, MODEL_NUM(FK)
+ 
+  => 아반떼 차량 모델을 여러 명이 살 수 있어? -> YES -> CAR_INFO(1) : SALES_INFO(N) 
+  => 판매기록 하나에 차량이 여러 대야? -> NO -> 판매기록 하나당 차량 하나
+
+ 
+
