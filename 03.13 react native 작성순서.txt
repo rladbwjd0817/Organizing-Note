@@ -1,0 +1,33 @@
+<react native 작성 순서>
+1. app 폴더에서 index.js 파일 생성
+2. index.js 파일의 컴포넌트명 해당 프로젝트 홈 화면에 맞는 명으로 바꾸기
+3. return문에 <SafeAreaView>를 사용 -> 휴대폰 베젤 밑으로 content 내려오게 하기
+4. 홈 화면에 띄울 컴포넌트 생성
+5. <SafeAreaView> 안에 홈 화면에 띄울 컴포넌트 넣기
+6. View = div와 같음
+7. TodoList 컴포넌트에서 리스트 내용을 저장할 state 변수 생성 -> 초기값은 dummy_data로 해서 여러 목록 데이터가 저장된 데이터를 초기값으로 설정
+8. <FlatList /> 생성해서 리스트 반복할 수 있게 해주기
+ ex) <FlatList 
+	data = {todoList} --------------------------------------------------------------> data : 반복할 데이터
+	renderItem={( item ) => { return <TodoItem item={item} /> }} -----> 반복해서 그릴 그림, 데이터가 여러 개 들어와서 중괄호 생략 X 
+	keyExtractor={( item ) => { return item.id }} -------> map함수의 key 속성과 동일(key값 정하는 속성)
+	contentContainerStyle={{ gap : 10 }} -----------------> 반복적으로 그려지는 컴포넌트를 감싸는 전체 영역의 디자인
+      />
+
+ => renderItem = {item, index, separators} 객체를 넘겨줌 
+       -> renderItem={( item ) => { return <TodoItem item={item} /> }} 
+       -> 여기서 화살표 함수의 매개변수자리에 있는item은 renderItem의 구조분해할당으로 가져온 item임
+
+ => FlatList는 무조건 item이라는 이름으로 받아야 함!!
+
+9. dummy_data 
+ - export해서 TodoList에서 사용할 수 있도록 넘겨주기
+ - 여러 데이터들의 목록이니 배열로 생성하고 안에 각 데이터들은 객체로 관리
+
+10. TodoItem 컴포넌트 생성
+ - props로 dummy데이터의 item 값 가져오기
+ - <Text>안에 dummy데이터의 값을 출력
+ - TodoList에 어울릴 아이콘 Text 밑에 넣어주기
+ 
+
+** react native는 기본적으로 flex가 걸려있음!
