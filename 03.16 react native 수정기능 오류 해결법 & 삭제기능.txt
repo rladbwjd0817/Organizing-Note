@@ -1,0 +1,25 @@
+<react native 수정기능 오류 해결법 & 삭제기능>
+
+1. 수정입력
+HomeScreen에서 setTodoList 호출
+  -> const updateTodo = (id, newContent) => {
+	setTodoList(todoList.map(todo => todo.id === id ? {...todo, content : newContent} : todo))}
+  
+	HomeScreen에서 수정함수 만들어서 prop으로 내려주기 : 
+  -> <TodoList todoList={todoList} updateTodo={updateTodo} />
+  -> <TodoList content={item} updateTodo={updateTodo} />
+  -> TodoItem에서 사용 : 
+	const TodoItem = ({ content, updateTodo }) => {
+		onBlur={
+			updateTodo(content.id, updateData.content) // 부모 state 업데이트
+			setIsUpdate(false)
+		}
+	}
+
+=> 흐름정리 : TodoItem 수정완료 -> updateTodo(id, 새내용)호출 -> HomeScreen의 todoList 업데이트 -> 화면 반영
+
+2. 삭제기능
+ - filter로 해당 id만 빼버리기
+ - 삭제 함수 생성
+  -> setTodoList(todoList.filter(todo => todo.id !== id))
+ - 쓰레기통 아이콘 onPress={( ) => {deleteTodo(content.id)}} 추가해주기
