@@ -1,0 +1,51 @@
+<센서데이터 가져오는 방법>
+1. 파이썬에서 직접 DB연결
+ : 라즈베리파이 python -> maria DB 직접 insert
+  -> 장점 : 구조 단순, 빠름 / 단점 : 라즈베리파이가 DB주소, 계정을 직접 알아야 해서 보안 이슈
+
+2. spring boot api 서버 경유
+ : 라즈베리파이 python -> http post -> spring boot -> maria DB
+  -> 파이썬에서 requests 라이브러리로 api 호출
+  -> spring boot 컨트롤러가 받아서 db에 저장
+  -> 장점 : 보안 좋고, 데이터 검증 가공가능, 확장성 높음 / 단점 : api 서버 구축 필요
+
+3. MQTT 브로커 경유
+ : 라즈베리 python -> MQTT publish -> 브로커 -> subscriber -> Maria DB
+  -> IoT에서 표준적으로 쓰는 메시지 큐 방식
+  -> 장점 : 네트워크 불안정해도 데이터 유실 적음, 다수 디바이스 확장 쉬움/ 단점 : MQTT 브로커 설치, 설정 필요, 러닝커브 있음
+
+<파이썬에서 MariaDB 연결>
+1. pip install pymysql 설치
+2. 위의 센서 데이터 가져오는 방법 3 가지 중 하나 선택해서 연결
+3. pymysql로 DB연결 후 insert
+   ex) 
+import pymysql
+
+conn = pymysql.connect(
+    host='DB주소',      # RDS면 AWS RDS 엔드포인트
+    user='아이디',
+    password='비밀번호',
+    database='DB이름'
+)
+cursor = conn.cursor()
+cursor.execute(
+    "INSERT INTO sensor_data (temperature, humidity, crop_id) VALUES (%s, %s, %s)",
+    (temp_c, humidity, 1)  # %s 순서대로 값 매핑
+)
+conn.commit()   # 실제 DB에 반영
+conn.close()    # 연결 종료
+
+4. 주의사항
+ - values에 변수 넣을 때 f-string 쓰면 안됨 => sql ingection 위험
+ - '%s' 플레이스 홀더 사용해야 pymysql이 안전하게 처리해줌
+ - 'commit( )' 안하면 DB에 안 들어감
+ - 'close( )' 안하면 연결이 계속 쌓임
+
+5. 전체 흐름
+10분마다 실행
+    ↓
+센서 읽기 시도 (최대 2번 재시도, 5초 간격)
+    ↓ 성공
+pymysql로 DB 연결 → INSERT → commit → close
+    ↓ 실패
+"스킵" 출력 → 다음 10분 대기
