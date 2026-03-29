@@ -1,0 +1,45 @@
+1. joinData state 변수 생성
+2. showPw, showPwConfirm, confirmData, errorMsg state 변수 생성 
+3. 권한 데이터 배열형식으로 생성
+4. interface SignUpStoreStasteType 생성
+5. signUpSchema 변수 생성
+6. 리턴 그림 그리기!
+7. input에 값 입력 
+ -> handleChange 함수 호출
+	-> 함수의 매개변수 e는 이벤트가 발생한 태그인것을 알려주는 React.ChangeEvent<HTMLInputElement> 지정
+	-> 구조분해할당으로 name, value를 e.target으로 저장
+	-> updateData변수에 스프레드연산자로 joinData, 이벤트가 발생한 input태그의 value값, confirmData(비밀번호 확인 데이터)를 저장
+	-> setJoinData state함수에 updateData 저장을 예약(밑에 할거 있으니까 마저 하고 리렌더링)
+	-> res변수에 signUpSchema의 safeParse함수 실행하여 updateData에 대한 유효성검사 결과의 값을 저장 => 통과 : seccess, 실패 : data(error)
+	-> if문 발동 : 만약 유효성 검사 결과가 실패라면 : 조건에 !res.success && res.error -> 더 정확히 검사하려고 두 조건을 적음
+	-> fieldErrors 변수에 객체로 된 인터페이스 SignUpStoreStateType의 모든 필드 선택하여 에러난 필드만 담은 객체 생성
+	-> res.error.issues.forEach : 유효성검사결과의 에러에서 에러 상세내용을 조회하여 반복돌림
+	-> 에러 상세내용들 중 하나의 요소를 issue에 저장하고, fieldName 변수에 배열로 저장된 에러 상세 내용을 저장 => keyof 속성으로 인터페이스 SignUpStoreStasteType에서 키 값만 들어올 수 있도록 제한 걸어둠
+	-> 만약 에러난 필드가 담긴 객체에서 키 값이 아니면 그 키 값에 에러 상세내용의 메시지를 저장
+	-> setErrorMsg state 함수에 에러난 필드만 담은 객체인 fieldErrors를 저장 예약(밑에 할거 있으면 마저 하고 리렌더링)
+	-> 아니면 setErrorMsg에 빈 객체 예약 저장
+8. 밑에 할거 다해서 리렌더링
+ -> joinData에 updateData 값 저장, 에러메시지 있으면 errorMsg에 에러난 필드만 담은 객체 저장
+ -> 화면에 출력
+9. 비밀번호 확인 input에 값 입력 
+ -> handleConfirmChange 함수 호출
+	-> 매개변수 e는 이벤트가 발생한 태그인것을 알려주는 React.ChangeEvent<HTMLInputElement> 지정
+	-> value 변수는 이벤트가 발생한 태그의 value값을 저장
+	-> setConfirmData state 함수에 value 값 저장을 예약(밑에 할 거 다하고 리렌더링)
+	-> res 변수에 signUpSchema의 내부 스키마에 접근하여 confirmData의 value값을 유효성검사의 결과 데이터를 저장
+	-> 비밀번호를 비교하기 위해 isMatch변수를 생성하고, isMatch에 joinData의 비밀번호가 value와 같은지 비교 => value는 confirmData임
+	-> setErrorMsg함수에 스프레드 연산자로 이전 상태 값인 prev와 confirmData의 value가 빈 배열이면 "비밀번호 확인을 입력하세요"를, 비밀번호가 일치하지 않으면 "비밀번호가 일치하지 않습니다"를 저장 ##undefined는 여기서 무슨 역할일까?
+10. 리렌더링
+ -> confirmData에 value값 저장, errorMsg에도 조건에 맞는 값이 저장
+ -> 화면에 출력 
+11. 회원가입 버튼 클릭
+ -> validate 함수 호출
+	-> 전체 유효성 검사 실행한 결과를 저장한 res 변수 생성
+	-> 만약 유효성 검사 결과가 실패라면 fieldErrors 변수에 SignUpStoreStateType의 모든 필드 선택하여 에러난 필드만 담은 객체를 생성
+	-> res.error.issues.forEach : 유효성 검사 결과의 에러에서 에러 상세 내용을 조회하여 반복돌림
+	-> issue에 에러의 상세내용 중 하나를 저장하고, fieldName 변수에 배열로 저장된 에러 상세 내용을 저장 => keyof 속성으로 인터페이스  SignUpStoreStateType에서 키 값만 들어올 수 있도록 제한 걸어둠
+	-> 만약 에러난 필드가 담긴 객체에서 키 값이 아니면 그 키 값에 에러 상세 내용의 메세지를 저장
+	-> setErrorMsg state 함수에 에러난 필드만 담은 객체인 fieldErrors를 저장 예약(밑에 할거 있으면 마저 하고 리렌더링 함)
+	-> 유효성검사 실패했으면 false 리턴, 유효성 검사 결과가 성공이면 setErrorMsg에는 빈 객체를 저장하고, true 리턴 
+12. 리렌더링해서 다시 그림 그림
+13. 화면에 유효성검사 통과하면 에러메시지 안뜨고 실패하면 에러메세지 뜸

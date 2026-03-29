@@ -1,0 +1,361 @@
+import { AppSelect, Button, Input, type ItemType } from "@/components";
+import { Label } from "@radix-ui/react-label";
+import React, { useState } from "react";
+import { CiMail } from "react-icons/ci";
+import { IoIosEyeOff, IoMdEye, IoMdLock } from "react-icons/io";
+import { IoIosCall } from "react-icons/io";
+
+
+const JoinForm = () => {
+  /* input에서 입력받은 값 저장할 state 변수 */
+  const [joinData, setJoinData] = useState({
+    //컬럼명으로 고치기
+    memEmail : "",
+    memPw : "",
+    memAs: "", 
+    memName : "",
+    memTel : "",
+    memAdd : "",
+    addDetail : "",
+    admin: ""
+  });
+
+  //비밀번호 보이기 / 숨김 저장할 state 변수
+  const [showPw, setShowPw] = useState(false);
+
+  //비밀번호 확인 보이기 / 숨김 저장할 state 변수
+  const [showPwConfirm, setShowPwConfirm] = useState(false);
+
+  //비밀번호 확인 데이터 담을 state 변수
+  const [confirmData, setConFirmData] = useState("");
+
+  //에러 메세지 저장할 state 변수
+  const [errorMsg, setErrorMsg] = useState({
+    memEmail : "",
+    memPw : "",
+    confirmData : "",
+    memAs: "", 
+    memName : "",
+    memTel : "",
+    memAdd : "",
+    addDetail : "",
+    admin: ""
+  });
+
+  //input 입력 받은 데이터 변경 함수
+  const handleJoinData = (e : React.ChangeEvent<HTMLInputElement>) => {
+    setJoinData({
+      ...joinData,
+      [e.target.name] : e.target.value
+    });
+  };
+  
+
+  //권한 select 데이터 변경 함수
+  const handleSelectData = (value : string) => {
+    setJoinData({
+      ...joinData,
+      admin : value
+    });
+  };
+
+
+  //유효성 검사 실행할 함수
+  const validateData = () => {
+    //유효성검사 통과 / 실패 상태 저장 변수
+    let isValid = true;
+
+    // 에러메세지 저장할 변수 생성
+    const newErrorMsg = {
+      memEmail : "",
+      memPw : "",
+      confirmData : "",
+      memAs: "", 
+      memName : "",
+      memTel : "",
+      memAdd : "",
+      addDetail : "",
+      admin: ""
+    };
+
+
+    //유효성 검사 실행
+
+    //1. 이메일
+    if(!joinData.memEmail){
+      newErrorMsg.memEmail = "이메일을 입력해주세요.";
+      isValid = false;
+    } 
+    else if(joinData.memEmail.length > 30){
+      newErrorMsg.memEmail = "이메일 길이는 30자 이하입니다.";
+      isValid = false;
+    } 
+    else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(joinData.memEmail)){
+      newErrorMsg.memEmail = "이메일 형식이 올바르지 않습니다.";
+      isValid = false;
+    }
+
+    //2. 비밀번호
+    if(!joinData.memPw){
+      newErrorMsg.memPw = "비밀번호를 입력해주세요.";
+      isValid = false;
+    }
+    else if(joinData.memPw.length < 8 || joinData.memPw.length > 16){
+      newErrorMsg.memPw = "비밀번호는 8~16자여야 합니다.";
+      isValid = false;
+    }
+    else if(!/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,16}$/.test(joinData.memPw)){
+      newErrorMsg.memPw = "비밀번호 형식이 올바르지 않습니다.";
+      isValid = false;
+    }
+
+    //3. 비밀번호 확인
+    if(!confirmData){
+      newErrorMsg.confirmData = "비밀번호 확인을 입력해주세요.";
+      isValid = false;
+    }
+    else if(joinData.memPw !== confirmData){
+      newErrorMsg.confirmData = "비밀번호가 일치하지 않습니다.";
+      isValid = false;
+    }
+
+    //4. 이름
+    if(!joinData.memName){
+      newErrorMsg.memName = "이름을 입력해주세요.";
+      isValid = false;
+    }
+    else if(joinData.memName.length < 1){
+      newErrorMsg.memName = "이름은 1자 이상이여야 합니다.";
+      isValid = false;
+    }
+
+    //5. 닉네임
+    if(!joinData.memAs){
+      newErrorMsg.memAs = "닉네임을 입력해주세요.";
+      isValid = false;
+    }
+    else if(joinData.memAs.length < 2){
+      newErrorMsg.memAs = "닉네임은 2자 이상이여야 합니다.";
+      isValid = false;
+    }
+
+    //6. 전화번호
+    if(!joinData.memTel){
+      newErrorMsg.memTel = "전화번호를 입력해주세요.";
+      isValid = false;
+    }
+    else if(!/^010-[0-9]{4}-[0-9]{4}$/.test(joinData.memTel)){
+      newErrorMsg.memTel = "전화번호 형식이 올바르지 않습니다.";
+      isValid = false;
+    }
+
+    //7. 주소
+    if(!joinData.memAdd){
+      newErrorMsg.memAdd = "주소를 입력해주세요.";
+      isValid = false;
+    }
+
+    //8. 권한
+    if(!joinData.admin){
+      newErrorMsg.admin = "권한을 선택해주세요.";
+      isValid = false;
+    }
+
+    setErrorMsg(newErrorMsg);
+    return isValid;
+  };
+
+
+  //권한 select 데이터
+  const authority: ItemType[] =[
+    {
+      value: "user",
+      title: "일반 회원",
+    },
+    {
+      value: "farmer",
+      title: "농업인",
+    }
+  ];
+
+  return (
+    <div className="flex justify-center items-center w-full border 1px solid red">
+      {/* 회원가입 */}
+      <div className="flex flex-col gap-1 border 1px solid black p-5 w-96">
+
+        {/* 이메일 */}
+        <div className="mb-4 ">
+          <Label className="mt-2 mb-1 text-sm">이메일</Label>
+          <div className="relative flex gap-1">
+            <CiMail 
+              className=" absolute my-2.5 mx-2"/>
+            <Input 
+              className="px-7 w-64"
+              placeholder="이메일"
+              name="memEmail"
+              value={joinData.memEmail}
+              onChange={e => handleJoinData(e)}
+            />
+            <Button type="button" variant="outline">중복 확인</Button>
+          </div>
+          {errorMsg.memEmail && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memEmail}</p>}
+        </div>
+
+        {/* 비밀번호 */}
+        <div 
+          className="relative mb-4"
+        >
+          <Label className="text-sm mb-1">비밀번호</Label>
+          <div className="relative">
+            <IoMdLock
+              className="absolute my-2.5 mx-2"
+            />
+            
+            <Input 
+              className="px-7 flex-1"
+              placeholder="대소문자,숫자,특수문자 조합 8~16자 필수 입력" 
+              type={showPw ? "text" : "password"}
+              name="memPw"
+              value={joinData.memPw}
+              onChange={e => handleJoinData(e)}
+            />
+            <div className="flex justify-self-end ">
+              <Button 
+                type="button"
+                variant="link" 
+                className="absolute -right-0.5 bottom-0.5 text-black"
+                onClick={() => setShowPw(!showPw)}>
+                {/*showPw가 true면 보이기, false면 숨김*/}
+                {showPw ? <IoMdEye /> : <IoIosEyeOff />}
+              </Button>
+            </div>
+            {errorMsg.memPw && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memPw}</p>}
+          </div>
+        </div>
+
+        {/* 비밀번호 확인 */}
+        <div 
+          className="relative mb-4"
+        >
+          <Label className="text-sm mb-1">비밀번호 확인</Label>
+          <div>
+            <IoMdLock
+              className="absolute my-2.5 mx-2"
+            />
+            <Input 
+              className="px-7 flex=1"
+              placeholder="비밀번호 확인" 
+              type={showPwConfirm ? "text" : "password"}
+              name="confirmData"
+              value={confirmData}
+              onChange={e => setConFirmData(e.target.value)}
+            />
+            <div className="flex justify-self-end">
+              <Button 
+                type="button"
+                variant="link" 
+                className="absolute bottom-0.5 -right-0.5 text-black "
+                onClick={() => setShowPwConfirm(!showPwConfirm)}>
+                {/*showPwConfirm이 true면 보이기, false면 숨김*/}
+                {showPwConfirm ? <IoMdEye  /> : <IoIosEyeOff />}
+              </Button>
+            </div>
+            {errorMsg.confirmData && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.confirmData}</p>}
+          </div>
+        </div>
+
+        {/* 닉네임 */}
+        <div className="mb-4 ">
+          <Label className="text-sm mb-1">닉네임</Label>
+          <div className="flex gap-1">
+            <Input 
+              className="px-7 w-64"
+              name="memAs"
+              value={joinData.memAs}
+              onChange={e => handleJoinData(e)}
+            />
+            <Button type="button" variant="outline">중복 확인</Button>
+          </div>
+          {errorMsg.memAs && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memAs}</p>}
+        </div>
+
+        {/* 이름 */}
+        <div className="mb-4 ">
+          <Label className="text-sm mb-1">이름</Label>
+          <Input 
+            className="px-7 flex-1"
+            name="memName"
+            value={joinData.memName}
+            onChange={e => handleJoinData(e)}
+          />
+          {errorMsg.memName && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memName}</p>}
+        </div>
+
+        {/* 전화번호 */}
+        <div className="mb-4">
+          <Label className="text-sm mb-1">전화번호</Label>
+          <div>
+            <IoIosCall className="absolute my-2.5 mx-2"/>
+            <Input 
+              className="px-7 flex-1"
+              placeholder="010-XXXX-XXXX"
+              name="memTel"
+              value={joinData.memTel}
+              onChange={e => handleJoinData(e)}
+            />
+            {errorMsg.memTel && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memTel}</p>}
+          </div>
+        </div>
+
+        {/* 주소 */}
+        <div>
+          <Label className="text-sm mb-1">주소</Label>
+          <div className="flex gap-1">
+            <Input 
+              className="px-7 w-64"
+              name="memAdd"
+              value={joinData.memAdd}
+              onChange={e => handleJoinData(e)}
+            />
+            <Button type="button">주소 검색</Button>
+          </div>
+        </div>
+
+        {/* 상세 주소 */}
+        <div className="mb-4 ">
+          <Input 
+            className="px-7 flex-1"
+            placeholder="상세주소 입력(선택사항)"
+            name="addDetail"
+            value={joinData.addDetail}
+            onChange={e => handleJoinData(e)}
+          />
+          {errorMsg.memAdd && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.memAdd}</p>}
+        </div>
+
+        {/* 권한 */}
+        <div className="mb-4 ">
+          <Label className="text-sm mb-1">권한</Label>
+          <AppSelect 
+            id="authority" 
+            items={authority}
+            value={joinData.admin}
+            onValueChange={e => handleSelectData(e)}
+          />
+          {errorMsg.admin && <p className="text-sm text-red-600 mt-1 pl-1">{errorMsg.admin}</p>}
+        </div>
+
+        {/* 로그인 버튼 */}
+        <div>
+          <Button 
+            type="button"
+            className="w-64 mx-10"
+            onClick={() => {validateData();}}
+          >회원가입</Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default JoinForm;
